@@ -1,28 +1,34 @@
-<dashboard-pie-chart></dashboard-pie-chart>
+
 
 <div class="row">
   <div class="col-lg-6 col-md-12 col-sm-12"
        ba-panel
-       ba-panel-title="Acquisition Channels"
-       ba-panel-class="medium-panel traffic-panel">
-    <traffic-chart></traffic-chart>
+       ba-panel-class="popular-app medium-panel">
+    <popular-app></popular-app>
   </div>
+  <!--<div class="col-lg-6 col-md-12 col-sm-12"-->
+       <!--ba-panel-->
+       <!--ba-panel-title="Users by Country"-->
+       <!--ba-panel-class="medium-panel">-->
+    <!--<dashboard-map></dashboard-map>-->
+  <!--</div>-->
   <div class="col-lg-6 col-md-12 col-sm-12"
        ba-panel
-       ba-panel-title="Users by Country"
+       ba-panel-title="Predicted vs. Actual Energy Generated"
        ba-panel-class="medium-panel">
-    <dashboard-map></dashboard-map>
+    <dashboard-line-chart></dashboard-line-chart>
   </div>
 </div>
+<dashboard-pie-chart></dashboard-pie-chart>
 
 <div class="row">
   <div class="col-xlg-9 col-lg-6 col-md-6 col-sm-12 col-xs-12">
     <div class="row">
       <div class="col-xlg-8 col-lg-12 col-md-12 col-sm-7 col-xs-12"
-           ba-panel
-           ba-panel-title="Revenue"
-           ba-panel-class="medium-panel">
-        <dashboard-line-chart></dashboard-line-chart>
+        ba-panel
+        ba-panel-title="Users by Country"
+        ba-panel-class="medium-panel">
+        <dashboard-map></dashboard-map>
       </div>
       <div class="col-xlg-4 col-lg-12 col-md-12 col-sm-5 col-xs-12"
            ba-panel

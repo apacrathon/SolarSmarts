@@ -13,12 +13,12 @@
     var pieColor = baUtil.hexToRGB(baConfig.colors.defaultText, 0.2);
     $scope.charts = [{
       color: pieColor,
-      description: 'New Visits',
+      description: 'Accuracy(1 Day)',
       stats: '57,820',
       icon: 'person',
     }, {
       color: pieColor,
-      description: 'Purchases',
+      description: 'Accuracy(7 days)',
       stats: '$ 89,745',
       icon: 'money',
     }, {
@@ -34,9 +34,9 @@
     }
     ];
 
-    function getRandomArbitrary(min, max) {
-      return Math.random() * (max - min) + min;
-    }
+    // function getRandomArbitrary(min, max) {
+    //   return Math.random() * (max - min) + min;
+    // }
 
     function loadPieCharts() {
       $('.chart').each(function () {
@@ -60,10 +60,12 @@
         updatePieCharts();
       });
     }
-
+    var percentages = [50,95,40,75];
+    var percentageIndex = 0;
     function updatePieCharts() {
       $('.pie-charts .chart').each(function(index, chart) {
-        $(chart).data('easyPieChart').update(getRandomArbitrary(55, 90));
+        $(chart).data('easyPieChart').update(percentages[percentageIndex]);
+        percentageIndex++;
       });
     }
 
