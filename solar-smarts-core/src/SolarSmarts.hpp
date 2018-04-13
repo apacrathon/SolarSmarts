@@ -1,5 +1,6 @@
 #pragma once
 
+// std
 #include <map>
 #include <array>
 #include <mutex>
@@ -14,12 +15,17 @@
 #include <functional>
 #include <unordered_map>
 
-#ifdef _DEBUG
+// boost
+#include <boost\make_shared.hpp>
+
+//#ifdef _DEBUG
 #define PRINT(__fmt__,...) \
-	printf("[" __FUNCTION__ "]: " __fmt__, __VA_ARGS__)
-#else
-#define PRINT(__fmt__,...)
-#endif
+	printf("[" __FUNCTION__ "]: " __fmt__ "\n", __VA_ARGS__)
+//#else
+//#define PRINT(__fmt__,...)
+//#endif
+
+//using namespace Utils;
 
 namespace SolarSmarts
 {
