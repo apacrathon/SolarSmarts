@@ -385,7 +385,7 @@ ASALocalRun/
 .mfractor/
 
 # Visual Studio Project and Solution files
-*.sln
-*.vcxproj
-*.user
-*.filters
+**.sln
+**.vcxproj
+**.user
+**.filters
