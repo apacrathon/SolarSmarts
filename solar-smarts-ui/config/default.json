@@ -1,0 +1,38 @@
+{
+  "host": "localhost",
+  "port": 8080,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "mysql": "mysql://solar:solarsmarts@solarsmarts.cwspsvjaweae.us-east-2.rds.amazonaws.com:3306/SolarSmarts",
+  "dbhost": "solarsmarts.cwspsvjaweae.us-east-2.rds.amazonaws.com",
+  "dbname": "SolarSmarts",
+  "username": "solar",
+  "password": "solarsmarts",
+  "authentication": {
+    "secret": "a2b328247b749d317ab4ce8d72847e204e9db0a605e16d98ec51cdc365b9adcd616afe61e905aa71f32ab4131f8b6f426afe1ba1f2c1e88cdb21fa2b8d91d81e0431744b0a3c59a821650f189cb612a676a3f469658fd7def1957a9792f4dbb4a6dc3e2c9cab66a14718de76a68de59316656fcfed6aacd2cc19f9a967e6ebc44d138509d797dc4fa1bc02ad7af4d7530a6333f1ae4855c353a59556f4aa2f72d2e6385dd6ae33fde975341a2c37aac3115c6f33f0e973f97bc8e6c198ee476bc677aedba1ac599737c62c49eb479616c6c21d532c97afc34da6cec5cf1d957ee59ff473b81d97a999f04fc21bbe2fa6dfa92cbe99f413693b5722e0a780d67a",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  }
+}
