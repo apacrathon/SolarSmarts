@@ -1,0 +1,8 @@
+LIBRARY Regress
+EXPORTS
+RegressInitialize
+RegressInitializeWithHandlers
+RegressTerminate
+RegressPrintStackTrace
+mlxRegress
+

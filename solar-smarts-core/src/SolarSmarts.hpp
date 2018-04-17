@@ -18,6 +18,10 @@
 // boost
 #include <boost\make_shared.hpp>
 
+// mcr
+#include "mclmcrrt.h"
+#include "mclcppclass.h"
+
 //#ifdef _DEBUG
 #define PRINT(__fmt__,...) \
 	printf("[" __FUNCTION__ "]: " __fmt__ "\n", __VA_ARGS__)
@@ -25,9 +29,8 @@
 //#define PRINT(__fmt__,...)
 //#endif
 
-//using namespace Utils;
-
 namespace SolarSmarts
 {
 	void Init();
+	void MCR_Regress(std::shared_ptr<mwArray>, std::shared_ptr<mwArray>);
 }

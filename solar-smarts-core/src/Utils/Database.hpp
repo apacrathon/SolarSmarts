@@ -54,6 +54,8 @@ namespace Utils
 			{ 
 				PRINT("%s", e.getSQLStateCStr());
 			}
+
+			if (this->m_connection->isValid()) PRINT("IM VALID!");
 		}
 
 		SS_INLINE void Disconnect()
