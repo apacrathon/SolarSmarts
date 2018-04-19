@@ -36,6 +36,13 @@ namespace Utils
 			this->m_driver.reset(get_mysql_driver_instance());
 		}
 
+		SS_INLINE ~Database()
+		{
+			m_driver.release();
+			m_connection.release();
+			m_statement.release();
+		}
+
 		SS_INLINE void Connect(const std::string& host, const std::string& user, const std::string& password, const std::string& database)
 		{
 			PRINT("Connecting to database...");

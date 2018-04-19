@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration file="X:\Users\raj\Documents\Spring 2018\Capstone\SolarSmarts\solar-smarts-matlab\functions\Regress.prj" location="X:\Users\raj\Documents\Spring 2018\Capstone\SolarSmarts\solar-smarts-matlab\functions" name="Regress" target="target.ezdeploy.library" target-name="Library Compiler">
+  <configuration build-checksum="1848759141" file="X:\Users\raj\Documents\Spring 2018\Capstone\SolarSmarts\solar-smarts-matlab\functions\Regress.prj" location="X:\Users\raj\Documents\Spring 2018\Capstone\SolarSmarts\solar-smarts-matlab\functions" name="Regress" preferred-package-location="X:\Users\raj\Documents\Spring 2018\Capstone\SolarSmarts\solar-smarts-matlab\functions\Regress\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
     <param.appname>Regress</param.appname>
     <param.icon />
     <param.icons />
