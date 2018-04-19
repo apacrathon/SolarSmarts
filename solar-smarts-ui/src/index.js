@@ -17,5 +17,5 @@ process.on('unhandledRejection', (reason, p) =>
 );
 
 server.on('listening', () =>
-  logger.info('SolarSmarts Plus started on https://%s', app.get('host'))
+  logger.info('SolarSmarts started on https://%s', app.get('host'))
 );
