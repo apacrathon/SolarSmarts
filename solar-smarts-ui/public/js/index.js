@@ -1,0 +1,195 @@
+'use strict';
+
+let serverUrl = 'https://localhost';
+const feathersClient = feathers()
+    .configure(feathers.rest(serverUrl).fetch(fetch));
+
+const query = feathersClient.service('/query');
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+let app = angular.module('myApp', []);
+
+app.controller('myCtrl', [
+    '$scope',
+    function($scope) {
+        jQuery(document).ready(function(){
+            let todayPrediction = formatDate(new Date());
+            $( function() {
+                $( "#datepicker" ).datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    onSelect: function() {
+                        todayPrediction = document.getElementById('datepicker').value;
+                        populateFields(todayPrediction);
+                    }
+                });
+                $( "#datepicker" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
+            } );
+            function populateFields(todayPrediction) {
+                let yesterdayDate = "2018-04-18";
+                query.find({
+                    query: {
+                        rawQuery: "SELECT * FROM SolarSmarts.DarkSky WHERE (Date between '"+todayPrediction+"' AND '"+todayPrediction+" 23:59:59');"
+                    }
+                }).then(function(response) {
+                    let irradianceSum = 0;
+                    let humiditySum = 0;
+                    let tempSum = 0;
+                    for(var i = 0; i < response[0].length; i++) {
+                        irradianceSum += response[0][i].Solar_Irradiance;
+                        humiditySum += response[0][i].Humidity;
+                        tempSum += response[0][i].Temperature;
+                    }
+                    let irradianceAvg = Math.round(irradianceSum/response[0].length);
+                    let humidityAvg = Math.round(humiditySum/response[0].length);
+                    let tempAvg = Math.round(tempSum/response[0].length);
+
+                    $scope.$apply(() => {
+                        $scope.irradianceAvg = irradianceAvg;
+                        $scope.humidityAvg = humidityAvg;
+                        $scope.tempAvg = tempAvg;
+                    });
+                });
+                // Current Day Graph and statistics
+                query.find({
+                    query: {
+                        rawQuery: "SELECT P.Date as PDate, P.Temperature as PTemp, P.Humidity as PHumidity, P.Solar_Irradiance as PSolar, P.ghi as PGhi, P.Power_generated as PGenerated, N.Date as NDate, N.Solar_Irradiance as NSolar, N.Temperature as NTemp, N.Power_Generation as NGenerated FROM SolarSmarts.Prediction P, SolarSmarts.Noveda N WHERE ((P.Date = N.Date) AND P.Date between '"+todayPrediction+"' AND '"+todayPrediction+" 23:59:59') GROUP BY P.Date;"
+                    }
+                }).then(function(response) {
+                    console.log(response);
+
+                    let predictedEnergy = 0;
+                    let actualEnergy = 0;
+                    let pEnergyArr = [];
+                    let aEnergyArr = [];
+                    for(var i = 0; i < response[0].length; i++) {
+                        predictedEnergy += response[0][i].PGenerated;
+                        pEnergyArr[i] = response[0][i].PGenerated;
+                        actualEnergy += response[0][i].NGenerated;
+                        aEnergyArr[i] = response[0][i].NGenerated;
+                    }
+                    console.log();
+                    let maxEnergy = Math.max(Math.max(...pEnergyArr),Math.max(...aEnergyArr));
+                    $scope.$apply(() => {
+                        $scope.PEnergyGenerated = predictedEnergy;
+                        $scope.AEnergyGenerated = actualEnergy;
+                        $scope.todayPrediction = todayPrediction;
+
+                        var ctx = document.getElementById("myAreaChart");
+                        var myLineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ["8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
+                                datasets: [
+                                    {
+                                        label: "Predicted",
+                                        lineTension: 0.3,
+                                        backgroundColor: "rgba(2,117,216,0.2)",
+                                        borderColor: "rgba(2,117,216,1)",
+                                        pointRadius: 5,
+                                        pointBackgroundColor: "rgba(2,117,216,1)",
+                                        pointBorderColor: "rgba(255,255,255,0.8)",
+                                        pointHoverRadius: 5,
+                                        pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                                        pointHitRadius: 20,
+                                        pointBorderWidth: 2,
+                                        data: pEnergyArr,
+                                    },
+                                    {
+                                        label: "Actual",
+                                        lineTension: 0.3,
+                                        backgroundColor: "rgba(216,45,2,0.2)",
+                                        borderColor: "rgba(216,45,2,1)",
+                                        pointRadius: 5,
+                                        pointBackgroundColor: "rgba(216,45,2,1)",
+                                        pointBorderColor: "rgba(216,45,2,0.8)",
+                                        pointHoverRadius: 5,
+                                        pointHoverBackgroundColor: "rgba(216,45,2,1)",
+                                        pointHitRadius: 20,
+                                        pointBorderWidth: 2,
+                                        data: aEnergyArr,
+                                    }
+                                ],
+
+                            },
+                            options: {
+                                scales: {
+                                    xAxes: [{
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'Hours'
+                                        },
+                                        time: {
+                                            unit: 'date'
+                                        },
+                                        gridLines: {
+                                            display: false
+                                        },
+                                        ticks: {
+                                            maxTicksLimit: 13
+                                        }
+                                    }],
+                                    yAxes: [{
+                                        ticks: {
+                                            min: 0,
+                                            max: maxEnergy+100,
+                                            maxTicksLimit: Math.ceil(maxEnergy/50)
+                                        },
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: 'kWh Produced'
+                                        },
+                                        gridLines: {
+                                            color: "rgba(0, 0, 0, .125)",
+                                        }
+                                    }],
+                                },
+                                legend: {
+                                    display: true
+                                }
+                            }
+                        });
+                    });
+                });
+                //Previous day
+                query.find({
+                    query: {
+                        rawQuery: "SELECT P.Date as PDate, P.Temperature as PTemp, P.Humidity as PHumidity, P.Solar_Irradiance as PSolar, P.ghi as PGhi, P.Power_generated as PGenerated, N.Date as NDate, N.Solar_Irradiance as NSolar, N.Temperature as NTemp, N.Power_Generation as NGenerated FROM SolarSmarts.Prediction P, SolarSmarts.Noveda N WHERE ((P.Date = N.Date) AND P.Date between '"+yesterdayDate+"' AND '"+yesterdayDate+" 23:59:59') GROUP BY P.Date;"
+                    }
+                }).then(function(response) {
+                    let predictedEnergy = 0;
+                    let actualEnergy = 0;
+                    let pEnergyArr = [];
+                    let aEnergyArr = [];
+                    for(var i = 0; i < response[0].length; i++) {
+                        predictedEnergy += response[0][i].PGenerated;
+                        actualEnergy += response[0][i].NGenerated;
+                    }
+                    let percentError = Math.abs((predictedEnergy-actualEnergy)/predictedEnergy)*100;
+                    percentError = percentError.toFixed(2);
+                    $scope.$apply(() => {
+                        $scope.pEnergyGeneratedYday = predictedEnergy;
+                        $scope.aEnergyGeneratedYday = actualEnergy;
+                        $scope.ydayPercentError = percentError;
+
+
+                    });
+                });
+            }
+
+
+
+        });
+    }
+]);

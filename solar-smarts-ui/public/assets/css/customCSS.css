@@ -1,0 +1,156 @@
+#mainSearchBar {
+  -webkit-border-radius: 15px 0px 0px 15px;
+  -moz-border-radius: 15px 0px 0px 15px;
+  border-radius: 15px 0px 0px 15px;
+  border-color: #c5c4c8;
+  float: left;
+  width: 60%;
+}
+#searchBarsHover:hover #mainSearchBar {
+  outline: none;
+  border-color: #c5c4c8;
+  box-shadow: 0 0 30px #c5c4c8;
+}
+#searchBarsHover:hover  #mainSearchBar2 {
+  outline: none;
+  border-color: #c5c4c8;
+  box-shadow: 0 0 30px #c5c4c8;
+}
+
+#mainSearchBar2 {
+  -webkit-border-radius: 0px 15px 15px 0px;
+  -moz-border-radius: 0px 15px 15px 0px;
+  border-radius: 0px 15px 15px 0px;
+  border-color: #c5c4c8;
+  float: right;
+  width: 40%;
+}
+
+.barCityState {
+  margin-top: -12px;
+}
+
+.fa-fw {
+  color: black;
+}
+
+.fa-glass {
+  color: #2B3E51;
+}
+
+[rel="popover"]{
+  cursor: pointer;
+  display:inline-block; /* chrome-fix */
+}
+
+.module-title {
+  font: 700 38px/1.2 'Dancing Script', cursive;
+  margin: 0 0 18px;
+  text-align:center;
+}
+.modalMenu {
+  cursor: pointer;
+}
+
+.menu-title,
+.menu-detail,
+.menu-price-detail {
+  text-align: left;
+  padding-left: 15%;
+}
+
+.menu-detail {
+  margin-top: -15px;
+  padding-bottom: 5px;
+}
+
+#modalMenuHeight {
+  overflow:scroll;
+  height:400px;
+}
+
+/*body.modal-open {*/
+  /*position: fixed;*/
+  /*width: 100%;*/
+  /*top:0;*/
+  /*left: 0;*/
+  /*height: 100%;*/
+  /*overflow-y: scroll !important;*/
+  /*z-index: 10;*/
+/*}*/
+
+.star-rating, .back-stars, .front-stars {
+  display: flex;
+}
+
+.star-rating {
+  align-items: center;
+  font-size: 2em;
+  justify-content: left;
+}
+
+.back-stars {
+  color: #747472;
+  position: relative;
+  text-shadow: 4px 4px 10px #747472;
+}
+
+.front-stars {
+  color: #FFBC0B;
+  overflow: hidden;
+  position: absolute;
+  text-shadow: 2px 2px 5px #d29b09;
+  top: 0;
+}
+
+#searchResultsDiv {
+  overflow:scroll;
+  max-height:500px;
+  margin: auto;
+}
+
+.modalFormHidden {
+  display: none;
+}
+.modalFormShown {
+
+}
+
+.whiteBg {
+  color: #444444;
+  background: #ffffff;
+}
+
+.followingBarsList {
+  padding: 0;
+  margin: 0;
+}
+#topRatedSearch {
+  border-color: #c5c4c8;
+  margin: auto;
+  width: 40%;
+}
+#mostPopularSearch {
+  border-color: #c5c4c8;
+  margin: auto;
+  width: 40%;
+}
+.fireIcon:hover i{
+  color: #ff5e0b;
+}
+.fireIcon i{
+  color: white;
+}
+.fireIcon {
+  color: white;
+}
+.starIcon:hover i{
+  color: #FFBC0B;
+}
+.starIcon i{
+  color: white;
+}
+.starIcon {
+  color: white;
+}
+
