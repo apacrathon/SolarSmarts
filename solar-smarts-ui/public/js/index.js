@@ -73,18 +73,25 @@ app.controller('myCtrl', [
                     let actualEnergy = 0;
                     let pEnergyArr = [];
                     let aEnergyArr = [];
+
                     for(var i = 0; i < response[0].length; i++) {
                         predictedEnergy += response[0][i].PGenerated;
                         pEnergyArr[i] = response[0][i].PGenerated;
                         actualEnergy += response[0][i].NGenerated;
                         aEnergyArr[i] = response[0][i].NGenerated;
+                        let tableTime = new Date(response[0][i].PDate);
+                        response[0][i].timeOfDay = "" + tableTime.getUTCHours() + ":" + tableTime.getUTCMinutes() + "0";
+                        let percentError = Math.abs((response[0][i].NGenerated-response[0][i].PGenerated)/response[0][i].NGenerated)*100;
+                        percentError = percentError.toFixed(2);
+                        response[0][i].percentError = percentError;
                     }
-                    console.log();
                     let maxEnergy = Math.max(Math.max(...pEnergyArr),Math.max(...aEnergyArr));
                     $scope.$apply(() => {
                         $scope.PEnergyGenerated = predictedEnergy;
                         $scope.AEnergyGenerated = actualEnergy;
                         $scope.todayPrediction = todayPrediction;
+                        $scope.energyGenPredTable = response[0];
+
 
                         var ctx = document.getElementById("myAreaChart");
                         var myLineChart = new Chart(ctx, {
@@ -176,7 +183,7 @@ app.controller('myCtrl', [
                         predictedEnergy += response[0][i].PGenerated;
                         actualEnergy += response[0][i].NGenerated;
                     }
-                    let percentError = Math.abs((predictedEnergy-actualEnergy)/predictedEnergy)*100;
+                    let percentError = Math.abs((actualEnergy-predictedEnergy)/actualEnergy)*100;
                     percentError = percentError.toFixed(2);
                     $scope.$apply(() => {
                         $scope.pEnergyGeneratedYday = predictedEnergy;
