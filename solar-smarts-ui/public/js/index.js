@@ -50,7 +50,17 @@ app.controller('myCtrl', [
                 $scope.$apply(() => {
                     $scope.datePicked = 1;
                 });
-                let yesterdayDate = "2018-04-18";
+                let today = new Date(todayPrediction);
+                today.setHours(today.getHours() + 10);
+                let yesterday = new Date(today);
+                let pastWeek = new Date(today);
+                yesterday.setDate(today.getUTCDate() - 1);
+                pastWeek.setDate(today.getUTCDate() - 6);
+                let yesterdayDate = formatDate(yesterday);
+                pastWeek = formatDate(pastWeek);
+                console.log(pastWeek);
+                console.log(yesterdayDate);
+                // Current day temperature
                 query.find({
                     query: {
                         rawQuery: "SELECT * FROM SolarSmarts.DarkSky WHERE (Date between '"+todayPrediction+"' AND '"+todayPrediction+" 23:59:59');"
@@ -227,6 +237,30 @@ app.controller('myCtrl', [
                         $scope.aEnergyGeneratedYday = actualEnergy;
                         $scope.ydayPercentError = percentError;
 
+
+                    });
+                });
+
+                query.find({
+                    query: {
+                        rawQuery: "SELECT P.Date as PDate, P.Temperature as PTemp, P.Humidity as PHumidity, P.Solar_Irradiance as PSolar, P.ghi as PGhi, P.Power_generated as PGenerated, N.Date as NDate, N.Solar_Irradiance as NSolar, N.Temperature as NTemp, N.Power_Generation as NGenerated FROM SolarSmarts.Prediction P, SolarSmarts.Noveda N WHERE ((P.Date = N.Date) AND P.Date between '"+pastWeek+"' AND '"+todayPrediction+" 23:59:59') GROUP BY P.Date;"
+                    }
+                }).then(function(response) {
+                    console.log(response[0]);
+                    let predictedEnergy = 0;
+                    let actualEnergy = 0;
+                    let pEnergyArr = [];
+                    let aEnergyArr = [];
+                    for(var i = 0; i < response[0].length; i++) {
+                        predictedEnergy += response[0][i].PGenerated;
+                        actualEnergy += response[0][i].NGenerated;
+                    }
+                    let percentError = Math.abs((actualEnergy-predictedEnergy)/actualEnergy)*100;
+                    percentError = percentError.toFixed(2);
+                    $scope.$apply(() => {
+                        $scope.pEnergyGeneratedWeek = predictedEnergy;
+                        $scope.aEnergyGeneratedWeek = actualEnergy;
+                        $scope.pastWeekPercentError = percentError;
 
                     });
                 });

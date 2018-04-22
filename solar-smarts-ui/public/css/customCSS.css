@@ -17,6 +17,13 @@
     margin-top: 10%;
 }
 
+.card-body {
+    padding-top: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+    padding-left: .25rem !important;
+}
+
 
 .tableSelect,
 .tableInput {
@@ -67,7 +74,7 @@
     background: #7aceff !important;
 }
 .tableList .head {
-    width: 100%;    color: #a5a5a5;
+    width: 100%;    color: rgba(0, 0, 0, 0.96);
 }
 ul.tableList{margin-bottom: 30px;}
 .tableData{    width: 100%;
@@ -109,7 +116,7 @@ ul.tableList{margin-bottom: 30px;}
 }
 .m3 span,
 .m6 span {
-    color: #b3b3b3;
+    color: rgba(0, 0, 0, 0.95);
     font-size: 16px;
 }
 .tableSelect,

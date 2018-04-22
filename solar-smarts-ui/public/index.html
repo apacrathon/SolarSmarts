@@ -174,7 +174,7 @@
               <div class="mr-5 font-weight-bold">Today's Weather</div>
               <div class="mr-5">Temperature: {{tempAvg}}</div>
               <div class="mr-5">Humidity: {{humidityAvg}}</div>
-              <div class="mr-6">Solar Irradiance: {{irradianceAvg}}</div>
+              <!--<div class="mr-6">Solar Irradiance: {{irradianceAvg}}</div>-->
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@
                 <i class="fa fa-fw fa-percent"></i>
               </div>
               <div class="mr-5 font-weight-bold">Error</div>
-              <div class="mr-5">Past 7: 36%</div>
+              <div class="mr-5">Past Week: {{pastWeekPercentError}}%</div>
               <div class="mr-7">Yesterday: {{ydayPercentError}}% <i class="fa fa-exclamation-triangle" ng-show="ydayPercentError > 75" aria-hidden="true"></i></div>
             </div>
           </div>
@@ -234,9 +234,9 @@
 
             <ul class="tableList">
               <li class="head">
-                <span ng-click="sortKey('timeOfDay')">Time</span>
-                <span ng-click="sortKey('PGenerated')">Predicted Energy</span>
-                <span ng-click="sortKey('NGenerated')">Actual Energy</span>
+                <span ng-click="sortKey('timeOfDay')">Time (24h)</span>
+                <span ng-click="sortKey('PGenerated')">Predicted Energy (kWh)</span>
+                <span ng-click="sortKey('NGenerated')">Actual Energy (kWh)</span>
                 <span ng-click="sortKey('percentError')">% Error</span>
               </li>
 
