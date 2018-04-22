@@ -4,3 +4,122 @@
 .fixedHeight {
     height: 130px;
 }
+
+.noDateHeader{
+    text-align: center;
+    font-family: Georgia;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: none;
+    text-transform: none;
+    color: #000000;
+    background-color: #ffffff;
+    margin-top: 10%;
+}
+
+
+.tableSelect,
+.tableInput {
+    border: 1px solid;
+    width: auto;
+    padding: 5px 10px;
+}
+.tableList {
+    width: 100%;
+    display: inline-block;
+}
+.tableList .head {
+    background: #eee;
+    display: inline-block;
+    padding: 5px;
+    margin: 10px 0 0 0;
+}
+.tableList .head span {
+    cursor: pointer;
+    width: 100px;
+    float: left;
+}
+.tableData {
+    display: inline-block;
+    padding: 3px;
+    width: 100%;
+}
+.tableData span {
+    width: 100px;
+    float: left;
+}
+.tableRow {
+    display: inline-block;
+    width: 100%;
+}
+.hide {
+    display: none;
+}
+.page-number {} .page-number button {
+                    display: inline-block;
+                    float: left;
+                    padding: 3px 5px;
+                    background: #f5f5f5;
+                    border: 1px solid #eee;
+                    margin: 5px 3px
+                }
+.current-page-btn {
+    background: #7aceff !important;
+}
+.tableList .head {
+    width: 100%;    color: #a5a5a5;
+}
+ul.tableList{margin-bottom: 30px;}
+.tableData{    width: 100%;
+    border-bottom: 1px solid #f9f9f9;
+    padding: 8px 13px;}
+
+.tableList .head span,.tableData span {
+    width: 25%;
+}
+.page-number button {
+    padding: 10px 20px;
+    border-radius: 3px;
+}
+.current-page-btn {
+    color: #fff;
+    border: 1px solid #5ab3e6 !important;
+}
+.noresult{    width: 101%;
+    text-align: center;
+    padding: 20px 0;
+    color: #d4a7a7;
+    font-size: 20px;
+    background: #f9f9f9;
+    margin: -3px 0 0 0;}
+
+.left {
+    float: left !important;
+}
+.right {
+    float: right !important;
+}
+.m3 {
+    width: 30%;
+}
+.m6 {
+    width: 60%;
+    text-align: right;
+    margin-bottom: 10px;
+}
+.m3 span,
+.m6 span {
+    color: #b3b3b3;
+    font-size: 16px;
+}
+.tableSelect,
+.tableInput {
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+.lightColor {
+    color: #a2a2a2;
+}
+.lightColor b {
+    padding: 0 5px;
+}

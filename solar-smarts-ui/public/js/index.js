@@ -20,10 +20,19 @@ function formatDate(date) {
 
 let app = angular.module('myApp', []);
 
+app.filter('ceilFilter', function(){
+    return function(data){
+        return Math.ceil(data);
+    };
+});
+
 app.controller('myCtrl', [
     '$scope',
     function($scope) {
         jQuery(document).ready(function(){
+            $scope.$apply(() => {
+                $scope.datePicked = 0;
+            });
             let todayPrediction = formatDate(new Date());
             $( function() {
                 $( "#datepicker" ).datepicker({
@@ -34,9 +43,13 @@ app.controller('myCtrl', [
                         populateFields(todayPrediction);
                     }
                 });
+
                 $( "#datepicker" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
             } );
             function populateFields(todayPrediction) {
+                $scope.$apply(() => {
+                    $scope.datePicked = 1;
+                });
                 let yesterdayDate = "2018-04-18";
                 query.find({
                     query: {
@@ -55,10 +68,16 @@ app.controller('myCtrl', [
                     let humidityAvg = Math.round(humiditySum/response[0].length);
                     let tempAvg = Math.round(tempSum/response[0].length);
 
+
+
                     $scope.$apply(() => {
                         $scope.irradianceAvg = irradianceAvg;
                         $scope.humidityAvg = humidityAvg;
                         $scope.tempAvg = tempAvg;
+                        if(response[0].length == 0) {
+                            console.log("jiro");
+                            $scope.datePicked = 2;
+                        }
                     });
                 });
                 // Current Day Graph and statistics
@@ -91,6 +110,24 @@ app.controller('myCtrl', [
                         $scope.AEnergyGenerated = actualEnergy;
                         $scope.todayPrediction = todayPrediction;
                         $scope.energyGenPredTable = response[0];
+
+                        $scope.currentPage = 1;
+                        $scope.total_show = "15";
+                        $scope.numberOfPages = 10;
+
+                        $scope.pagenumber = true;
+                        $scope.totla_result_showing = true;
+                        $scope.totla_result_showing_onsearcchh = false;
+
+                        $scope.sortKey = function(key) {
+                            $scope.currentPage = 1;
+                            $scope.myOrderBy = key;
+                        };
+
+                        $scope.maxtotal = Math.ceil(response[0].length / parseInt($scope.total_show));
+                        $scope.changeTotalShow = function(){
+                            $scope.maxtotal = response[0].length / parseInt($scope.total_show);
+                        };
 
 
                         var ctx = document.getElementById("myAreaChart");
@@ -197,6 +234,9 @@ app.controller('myCtrl', [
 
 
 
+
+
         });
+
     }
 ]);
