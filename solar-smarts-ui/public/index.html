@@ -46,84 +46,7 @@
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
           <a class="nav-link" href="charts.html">
             <i class="fa fa-fw fa-area-chart"></i>
-            <span class="nav-link-text">Charts</span>
-          </a>
-        </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-          <a class="nav-link" href="tables.html">
-            <i class="fa fa-fw fa-table"></i>
-            <span class="nav-link-text">Tables</span>
-          </a>
-        </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-wrench"></i>
-            <span class="nav-link-text">Components</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseComponents">
-            <li>
-              <a href="navbar.html">Navbar</a>
-            </li>
-            <li>
-              <a href="cards.html">Cards</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-file"></i>
-            <span class="nav-link-text">Example Pages</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseExamplePages">
-            <li>
-              <a href="login.html">Login Page</a>
-            </li>
-            <li>
-              <a href="register.html">Registration Page</a>
-            </li>
-            <li>
-              <a href="forgot-password.html">Forgot Password Page</a>
-            </li>
-            <li>
-              <a href="blank.html">Blank Page</a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
-            <i class="fa fa-fw fa-sitemap"></i>
-            <span class="nav-link-text">Menu Levels</span>
-          </a>
-          <ul class="sidenav-second-level collapse" id="collapseMulti">
-            <li>
-              <a href="#">Second Level Item</a>
-            </li>
-            <li>
-              <a href="#">Second Level Item</a>
-            </li>
-            <li>
-              <a href="#">Second Level Item</a>
-            </li>
-            <li>
-              <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Third Level</a>
-              <ul class="sidenav-third-level collapse" id="collapseMulti2">
-                <li>
-                  <a href="#">Third Level Item</a>
-                </li>
-                <li>
-                  <a href="#">Third Level Item</a>
-                </li>
-                <li>
-                  <a href="#">Third Level Item</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-          <a class="nav-link" href="#">
-            <i class="fa fa-fw fa-link"></i>
-            <span class="nav-link-text">Link</span>
+            <span class="nav-link-text">Anomalies</span>
           </a>
         </li>
       </ul>
@@ -160,8 +83,8 @@
                 <i class="fa fa-fw fa-bolt"></i>
               </div>
               <div class="mr-5 font-weight-bold" >Today's Output</div>
-              <div class="mr-6" >Predicted:  {{PEnergyGenerated}} kWh</div>
               <div class="mr-5" >Actual: {{AEnergyGenerated}} kWh</div>
+              <div class="mr-6" >Predicted:  {{PEnergyGenerated}} kWh</div>
             </div>
           </div>
         </div>
@@ -173,8 +96,8 @@
               </div>
               <div class="mr-5 font-weight-bold">Today's Weather</div>
               <div class="mr-5">Temperature: {{tempAvg}}</div>
-              <div class="mr-5">Humidity: {{humidityAvg}}</div>
-              <!--<div class="mr-6">Solar Irradiance: {{irradianceAvg}}</div>-->
+              <div class="mr-5">Humidity: {{humidityAvg}} %</div>
+              <div class="mr-6">Solar Irradiance: {{irradianceAvg}}</div>
             </div>
           </div>
         </div>
@@ -185,8 +108,8 @@
                 <i class="fa fa-fw fa-calendar"></i>
               </div>
               <div class="mr-5 font-weight-bold">Yesterday</div>
-              <div class="mr-5">Predicted: {{pEnergyGeneratedYday}} kWh</div>
               <div class="mr-5">Actual: {{aEnergyGeneratedYday}} kWh</div>
+              <div class="mr-6">Predicted: {{pEnergyGeneratedYday}} kWh</div>
             </div>
           </div>
         </div>
@@ -203,7 +126,7 @@
           </div>
         </div>
       </div>
-      <!-- Area Chart Example-->
+      <!-- Energy Predicted vs Actual Chart-->
       <div class="card mb-3">
         <div class="card-header">
           <i class="fa fa-area-chart"></i> Energy Predicted vs. Actual Graph</div>
@@ -211,6 +134,15 @@
           <canvas id="myAreaChart" width="100%" height="30"></canvas>
         </div>
       </div>
+      <!-- Solar Irradiance Predicted vs Actual Chart-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-area-chart"></i> Solar Irradiance Predicted vs. Actual Graph</div>
+        <div class="card-body">
+          <canvas id="mySolarChart" width="100%" height="30"></canvas>
+        </div>
+      </div>
+
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
@@ -342,9 +274,6 @@
     <script src="js/sb-admin-datatables.min.js"></script>
     <script src="js/sb-admin-charts.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script>
-
-    </script>
   </div>
 </body>
 
