@@ -30,6 +30,7 @@ app.controller('myCtrl', [
     '$scope',
     function($scope) {
         jQuery(document).ready(function(){
+            console.log("hello");
             $scope.$apply(() => {
                 $scope.datePicked = 0;
             });
@@ -335,7 +336,9 @@ app.controller('myCtrl', [
                         predictedEnergy += response[0][i].PGenerated;
                         actualEnergy += response[0][i].NGenerated;
                     }
-                    let percentError = Math.abs((actualEnergy-predictedEnergy)/actualEnergy)*100;
+                    console.log(predictedEnergy);
+                    console.log(actualEnergy);
+                    let percentError = (Math.abs(actualEnergy-predictedEnergy)/actualEnergy)*100;
                     percentError = percentError.toFixed(2);
                     $scope.$apply(() => {
                         $scope.pEnergyGeneratedYday = predictedEnergy.toFixed(0);
@@ -370,6 +373,14 @@ app.controller('myCtrl', [
                     });
                 });
             }
+            query.find({
+                query:{
+                    rawQuery: "SELECT * FROM (SELECT P.Date AS PDate, P.Temperature AS PTemp, P.Humidity AS PHumidity, P.Solar_Irradiance AS PSolar,P.ghi AS PGhi, P.Power_generated AS PGenerated, N.Date AS NDate, N.Solar_Irradiance AS NSolar, N.Temperature AS NTemp, N.Power_Generation AS NGenerated, DATE(P.Date) AS pErrorDay, ((ABS(SUM(P.Power_generated) - SUM(N.Power_Generation)) / SUM(N.Power_Generation)) * 100) AS PercentError FROM SolarSmarts.Prediction P, SolarSmarts.Noveda N WHERE P.Date = N.Date GROUP BY pErrorDay) A WHERE A.PercentError > 75;"
+                }
+            }).then(function(response){
+                console.log(response[0]);
+                $scope.response;
+            });
 
 
 
