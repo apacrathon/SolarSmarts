@@ -49,7 +49,15 @@ namespace SolarSmarts
 		iss >> std::get_time(&tm, "%Y-%m-%d %H:%M:%S");
 		return mktime(&tm);
 	}
-
+	
+	
+	SS_INLINE std::time_t str_to_time_t2(const std::string & date)
+	{
+		struct tm tm;
+		std::istringstream iss(date);
+		iss >> std::get_time(&tm, "%Y-%m-%d%%T%H:%M:%S.%%0000000Z");
+		return mktime(&tm);
+	}
 	SS_INLINE std::string stime(const time_t & t) {
 		std::tm tm = *std::localtime(&t);
 		std::stringstream ss;

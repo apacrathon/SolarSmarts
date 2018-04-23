@@ -9,9 +9,7 @@ namespace SolarSmarts
 	void DataHandler::UpdateWeatherData(const std::string& apikey, const std::string& latitude, const std::string& longitude, const time_t& date_max, const std::time_t& date_min)
 	{
 		PRINT("Updating weather data...");
-		std::string temp = stime(date_min);
-		std::cout << "Date min " << temp << std::endl;
-
+		
 		// storage vectors
 		std::vector<std::int64_t> datetime = {};
 		std::vector<double> humidity = {};
@@ -63,16 +61,22 @@ namespace SolarSmarts
 		PRINT("The database has been updated with new weather data");
 	}
 
-	void DataHandler::UpdatePredictionData(const std::string& apikey, const std::string& latitude, const std::string& longitude)
+	void DataHandler::UpdatePredictionData(const std::string& apikey, const std::string& latitude, const std::string& longitude, const time_t& date_max, const std::time_t& date_min)
 	{
-		// This stuff is just split from the weather predictions - Needs to be modified to work like the weather update
-		/*
+
+		PRINT("Updating Solcast data...");
+
+		// storage vectors
+		std::vector<double> future_ghi = {};
+		std::vector<std::int64_t> datetime = {};
+		
+		// Populate API request paramaters
 		std::string solcast_uri = "https://api.solcast.com.au/radiation/forecasts?longitude=[LONGITUDE]&latitude=[LATITUDE]&api_key=[KEY]&format=json";
 
-		// Populate API request paramaters
 		boost::replace_first(solcast_uri, "[KEY]", apikey);
-		boost::replace_first(solcast_uri, "[LONGITUDE]", longitude);
 		boost::replace_first(solcast_uri, "[LATITUDE]", latitude);
+		boost::replace_first(solcast_uri, "[LONGITUDE]", longitude);
+
 
 		// Make the HTTP request
 		m_request_handler->HttpGet(solcast_uri);
@@ -80,18 +84,26 @@ namespace SolarSmarts
 
 		pt::ptree pt = ParseJson(result_json);
 
-		// storage vector
-		std::vector<double> future_ghi = {};
-
-		// Traverse Json
 		pt::ptree forecastArray = pt.get_child("forecasts");
 
 		for (pt::ptree::iterator it = forecastArray.begin(); it != forecastArray.end(); it++)
 		{
 			pt::ptree object = it->second;
-			future_ghi.push_back(object.get<double>("ghi", -1));
+			
+			std::string temp = object.get<std::string>("period_end");
+			std::time_t time_value = str_to_time_t2(temp);
+
+			if (time_value > date_min)
+			{
+				datetime.push_back(time_value);
+				future_ghi.push_back(object.get<double>("ghi", -1));
+			}
+			
 		}
-		*/
+		// Store in SQL
+		m_database->InsertPrediction(datetime, future_ghi);
+
+		PRINT("The database has been updated with Solcast data if needed");
 	}
 
 	DataHandler::DataHandler()
@@ -127,11 +139,24 @@ namespace SolarSmarts
 			PRINT("Error getting result.");
 		}
 	
+		
+		
+
 		auto solcast_max_date = m_database->ExecuteQuery("SELECT Date FROM Solcast_Forecast WHERE Date = (SELECT MAX(Date) FROM Solcast_Forecast)");
 
 		if (solcast_max_date)
 		{
+			
 			// @TODO!
+			if (solcast_max_date->next())
+			{
+				
+				std::time_t last_time = str_to_time_t(solcast_max_date->getString("Date"));
+		
+				PRINT("Solcast data was updated till %s", solcast_max_date->getString("Date").c_str());
+				UpdatePredictionData("Q47SrBjYcpmpOle4__48T4w7bwQ5xaVe", "-74.435656", "40.526044", current_time, last_time);
+		
+			}
 			// solcast api key Q47SrBjYcpmpOle4__48T4w7bwQ5xaVe
 		}
 		else

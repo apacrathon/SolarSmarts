@@ -110,9 +110,20 @@ namespace SolarSmarts
 			}
 		}
 
-		SS_INLINE void InsertPrediction() 
+		SS_INLINE void InsertPrediction(std::vector<std::int64_t> datetime, std::vector<double> future_ghi)
 		{
-			// @TODO
+			m_prepared_statement.reset(m_connection->prepareStatement("INSERT INTO Solcast_Forecast(Date, ghi) VALUES (?,?)"));
+
+			for (auto i = 0; i < datetime.size(); i++)
+			{
+				if (i % 2 != 0)
+				{
+					m_prepared_statement->setDateTime(1, stime(datetime.at(i)));
+					m_prepared_statement->setDouble(2, future_ghi.at(i));
+
+					m_prepared_statement->executeUpdate();
+				}
+			}
 		}
 	private:
 		std::unique_ptr<sql::mysql::MySQL_Driver> m_driver;
