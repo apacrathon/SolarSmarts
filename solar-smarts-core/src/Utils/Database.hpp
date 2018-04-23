@@ -21,11 +21,10 @@
 #include <cppconn\version_info.h>
 #include <cppconn\warning.h>
 
-
 using namespace sql;
 using namespace sql::mysql;
 
-namespace Utils
+namespace SolarSmarts
 {
 	class Database
 	{
@@ -41,6 +40,7 @@ namespace Utils
 			m_driver.release();
 			m_connection.release();
 			m_statement.release();
+			m_prepared_statement.release();
 		}
 
 		SS_INLINE void Connect(const std::string& host, const std::string& user, const std::string& password, const std::string& database)
@@ -55,14 +55,12 @@ namespace Utils
 			try 
 			{ 
 				this->m_connection.reset(this->m_driver->connect(this->m_host, this->m_user, this->m_password));
-				PRINT("Connection successfully established.");
+				if (this->m_connection->isValid()) PRINT("Connection successfully established!");
 			}
 			catch(sql::SQLException e) 
 			{ 
 				PRINT("%s", e.getSQLStateCStr());
 			}
-
-			if (this->m_connection->isValid()) PRINT("IM VALID!");
 		}
 
 		SS_INLINE void Disconnect()
@@ -70,19 +68,57 @@ namespace Utils
 			this->m_connection->close();
 		}
 
-		SS_INLINE std::unique_ptr<ResultSet> ExecuteQuery(const std::string& query)
+		SS_INLINE std::shared_ptr< sql::ResultSet > ExecuteQuery(const std::string& query)
 		{
-			if (!m_connection->isValid()) return nullptr;
-		
-			this->m_statement.reset(this->m_connection->createStatement());
-			this->m_statement->execute("USE " + this->m_database);;
+			std::shared_ptr< sql::ResultSet > res;
+			try
+			{
+				if (!m_connection->isValid()) return nullptr;
 
-			return nullptr;
+				this->m_statement.reset(this->m_connection->createStatement());
+				this->m_statement->execute("USE " + this->m_database);
+				res.reset(this->m_statement->executeQuery(query));
+			}
+			catch (SQLException &e) 
+			{
+				std::cout << "# ERR: SQLException in " << __FILE__;
+				std::cout << "(" << __FUNCTION__ << ") on line " \
+					<< __LINE__ << std::endl;
+				std::cout << "# ERR: " << e.what();
+				std::cout << " (MySQL error code: " << e.getErrorCode();
+				std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+			}
+
+			m_statement->close();
+
+			return res;
 		}		
+
+		SS_INLINE void InsertWeather(std::vector<std::int64_t> datetime, std::vector<std::int64_t> temperature, std::vector<double> humidity)
+		{
+			if (temperature.size() != humidity.size() || temperature.size() != datetime.size()) return;
+
+			m_prepared_statement.reset(m_connection->prepareStatement("INSERT INTO DarkSky(Date, Temperature, Humidity) VALUES (?, ?, ?)"));
+			
+			for (auto i = 0; i < datetime.size(); i++)
+			{
+				m_prepared_statement->setDateTime(1, stime(datetime.at(i)));
+				m_prepared_statement->setDouble(2, temperature.at(i));
+				m_prepared_statement->setDouble(3, humidity.at(i));
+
+				m_prepared_statement->executeUpdate();
+			}
+		}
+
+		SS_INLINE void InsertPrediction() 
+		{
+			// @TODO
+		}
 	private:
 		std::unique_ptr<sql::mysql::MySQL_Driver> m_driver;
 		std::unique_ptr<Connection> m_connection;
 		std::unique_ptr<Statement> m_statement;
+		std::unique_ptr<PreparedStatement> m_prepared_statement;
 
 		std::string m_database;
 		std::string m_host;
