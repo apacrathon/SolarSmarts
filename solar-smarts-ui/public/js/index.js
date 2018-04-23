@@ -20,10 +20,19 @@ function formatDate(date) {
 
 let app = angular.module('myApp', []);
 
+app.filter('ceilFilter', function(){
+    return function(data){
+        return Math.ceil(data);
+    };
+});
+
 app.controller('myCtrl', [
     '$scope',
     function($scope) {
         jQuery(document).ready(function(){
+            $scope.$apply(() => {
+                $scope.datePicked = 0;
+            });
             let todayPrediction = formatDate(new Date());
             $( function() {
                 $( "#datepicker" ).datepicker({
@@ -34,10 +43,24 @@ app.controller('myCtrl', [
                         populateFields(todayPrediction);
                     }
                 });
+
                 $( "#datepicker" ).datepicker( "option", "dateFormat", 'yy-mm-dd' );
             } );
             function populateFields(todayPrediction) {
-                let yesterdayDate = "2018-04-18";
+                $scope.$apply(() => {
+                    $scope.datePicked = 1;
+                });
+                let today = new Date(todayPrediction);
+                today.setHours(today.getHours() + 10);
+                let yesterday = new Date(today);
+                let pastWeek = new Date(today);
+                yesterday.setDate(today.getUTCDate() - 1);
+                pastWeek.setDate(today.getUTCDate() - 6);
+                let yesterdayDate = formatDate(yesterday);
+                pastWeek = formatDate(pastWeek);
+                console.log(pastWeek);
+                console.log(yesterdayDate);
+                // Current day temperature
                 query.find({
                     query: {
                         rawQuery: "SELECT * FROM SolarSmarts.DarkSky WHERE (Date between '"+todayPrediction+"' AND '"+todayPrediction+" 23:59:59');"
@@ -55,10 +78,16 @@ app.controller('myCtrl', [
                     let humidityAvg = Math.round(humiditySum/response[0].length);
                     let tempAvg = Math.round(tempSum/response[0].length);
 
+
+
                     $scope.$apply(() => {
                         $scope.irradianceAvg = irradianceAvg;
                         $scope.humidityAvg = humidityAvg;
                         $scope.tempAvg = tempAvg;
+                        if(response[0].length == 0) {
+                            console.log("jiro");
+                            $scope.datePicked = 2;
+                        }
                     });
                 });
                 // Current Day Graph and statistics
@@ -91,6 +120,24 @@ app.controller('myCtrl', [
                         $scope.AEnergyGenerated = actualEnergy;
                         $scope.todayPrediction = todayPrediction;
                         $scope.energyGenPredTable = response[0];
+
+                        $scope.currentPage = 1;
+                        $scope.total_show = "15";
+                        $scope.numberOfPages = 10;
+
+                        $scope.pagenumber = true;
+                        $scope.totla_result_showing = true;
+                        $scope.totla_result_showing_onsearcchh = false;
+
+                        $scope.sortKey = function(key) {
+                            $scope.currentPage = 1;
+                            $scope.myOrderBy = key;
+                        };
+
+                        $scope.maxtotal = Math.ceil(response[0].length / parseInt($scope.total_show));
+                        $scope.changeTotalShow = function(){
+                            $scope.maxtotal = response[0].length / parseInt($scope.total_show);
+                        };
 
 
                         var ctx = document.getElementById("myAreaChart");
@@ -193,10 +240,37 @@ app.controller('myCtrl', [
 
                     });
                 });
+
+                query.find({
+                    query: {
+                        rawQuery: "SELECT P.Date as PDate, P.Temperature as PTemp, P.Humidity as PHumidity, P.Solar_Irradiance as PSolar, P.ghi as PGhi, P.Power_generated as PGenerated, N.Date as NDate, N.Solar_Irradiance as NSolar, N.Temperature as NTemp, N.Power_Generation as NGenerated FROM SolarSmarts.Prediction P, SolarSmarts.Noveda N WHERE ((P.Date = N.Date) AND P.Date between '"+pastWeek+"' AND '"+todayPrediction+" 23:59:59') GROUP BY P.Date;"
+                    }
+                }).then(function(response) {
+                    console.log(response[0]);
+                    let predictedEnergy = 0;
+                    let actualEnergy = 0;
+                    let pEnergyArr = [];
+                    let aEnergyArr = [];
+                    for(var i = 0; i < response[0].length; i++) {
+                        predictedEnergy += response[0][i].PGenerated;
+                        actualEnergy += response[0][i].NGenerated;
+                    }
+                    let percentError = Math.abs((actualEnergy-predictedEnergy)/actualEnergy)*100;
+                    percentError = percentError.toFixed(2);
+                    $scope.$apply(() => {
+                        $scope.pEnergyGeneratedWeek = predictedEnergy;
+                        $scope.aEnergyGeneratedWeek = actualEnergy;
+                        $scope.pastWeekPercentError = percentError;
+
+                    });
+                });
             }
 
 
 
+
+
         });
+
     }
 ]);
