@@ -24,10 +24,10 @@ namespace SolarSmarts
 		time_parts[7] = _time_parts->tm_hour;
 
 
-		if (time_parts[0] == time_parts[4])
-			if (time_parts[1] == time_parts[5])
-				if (time_parts[2] == time_parts[6])
-					if (time_parts[3] == time_parts[7])
+		if (time_parts[0] <= time_parts[4])
+			if (time_parts[1] <= time_parts[5])
+				if (time_parts[2] <= time_parts[6])
+					if (time_parts[3] <= time_parts[7])
 						return true;
 		
 		return false;
