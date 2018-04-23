@@ -43,84 +43,7 @@
       <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
         <a class="nav-link" href="charts.html">
           <i class="fa fa-fw fa-area-chart"></i>
-          <span class="nav-link-text">Charts</span>
-        </a>
-      </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-        <a class="nav-link" href="tables.html">
-          <i class="fa fa-fw fa-table"></i>
-          <span class="nav-link-text">Tables</span>
-        </a>
-      </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
-        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
-          <i class="fa fa-fw fa-wrench"></i>
-          <span class="nav-link-text">Components</span>
-        </a>
-        <ul class="sidenav-second-level collapse" id="collapseComponents">
-          <li>
-            <a href="navbar.html">Navbar</a>
-          </li>
-          <li>
-            <a href="cards.html">Cards</a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
-        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-          <i class="fa fa-fw fa-file"></i>
-          <span class="nav-link-text">Example Pages</span>
-        </a>
-        <ul class="sidenav-second-level collapse" id="collapseExamplePages">
-          <li>
-            <a href="login.html">Login Page</a>
-          </li>
-          <li>
-            <a href="register.html">Registration Page</a>
-          </li>
-          <li>
-            <a href="forgot-password.html">Forgot Password Page</a>
-          </li>
-          <li>
-            <a href="blank.html">Blank Page</a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion">
-          <i class="fa fa-fw fa-sitemap"></i>
-          <span class="nav-link-text">Menu Levels</span>
-        </a>
-        <ul class="sidenav-second-level collapse" id="collapseMulti">
-          <li>
-            <a href="#">Second Level Item</a>
-          </li>
-          <li>
-            <a href="#">Second Level Item</a>
-          </li>
-          <li>
-            <a href="#">Second Level Item</a>
-          </li>
-          <li>
-            <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Third Level</a>
-            <ul class="sidenav-third-level collapse" id="collapseMulti2">
-              <li>
-                <a href="#">Third Level Item</a>
-              </li>
-              <li>
-                <a href="#">Third Level Item</a>
-              </li>
-              <li>
-                <a href="#">Third Level Item</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
-        <a class="nav-link" href="#">
-          <i class="fa fa-fw fa-link"></i>
-          <span class="nav-link-text">Link</span>
+          <span class="nav-link-text">Anomalies</span>
         </a>
       </li>
     </ul>
@@ -140,13 +63,13 @@
       <li class="breadcrumb-item">
         <a href="index.html">Dashboard</a>
       </li>
-      <li class="breadcrumb-item active">Charts</li>
+      <li class="breadcrumb-item active">Anomalies</li>
     </ol>
 
     <!-- Anomaly Data-->
     <div class="card mb-3">
       <div class="card-header">
-        <i class="fa fa-table"></i> Hourly Data</div>
+        <i class="fa fa-table"></i> Anomaly Data</div>
       <div class="card-body">
 
         <div class="dataTable2">
@@ -166,22 +89,22 @@
 
           <ul class="tableList">
             <li class="head">
-              <span ng-click="sortKey('timeOfDay')">Time (24h)</span>
+              <span ng-click="sortKey('tableDate')">Date</span>
               <span ng-click="sortKey('PGenerated')">Predicted Energy (kWh)</span>
               <span ng-click="sortKey('NGenerated')">Actual Energy (kWh)</span>
-              <span ng-click="sortKey('percentError')">% Error</span>
+              <span ng-click="sortKey('PercentError')">% Error</span>
             </li>
 
-            <li class="tableData" ng-repeat="hour in energyGenPredTable | filter:search | limitTo:total_show:start_from | orderBy:myOrderBy">
-              <span>{{hour.timeOfDay}}</span>
+            <li class="tableData" ng-repeat="hour in anomalyList | filter:search | limitTo:total_show:start_from | orderBy:myOrderBy">
+              <span>{{hour.tableDate}}</span>
               <span>{{hour.PGenerated}}</span>
               <span>{{hour.NGenerated}}</span>
-              <span>{{hour.percentError}}<i class="fa fa-exclamation-triangle" ng-show="hour.percentError > 75 || hour.percentError == Infinity" aria-hidden="true"></i></span>
+              <span>{{hour.PercentError}}</i></span>
             </li>
 
 
 
-            <li class="noresult" ng-if="!(energyGenPredTable|filter:search).length">No matching channel found</li>
+            <li class="noresult" ng-if="!(anomalyList|filter:search).length">No matching channel found</li>
 
           </ul>
 
@@ -208,11 +131,6 @@
             <!-- Details -->
             <br>
             <div class="m3 left lightColor">Total Page: {{maxtotal}}</div>
-            <div class="m6 right lightColor">
-              <div ng-show="totla_result_showing">
-                Showing <b>{{start_from}}</b> to <b>{{(start_from * 1) + (total_show * 1)}}</b>, of <b>{{(energyGenPredTable|filter:search).length}}</b> items
-              </div>
-            </div>
 
 
 

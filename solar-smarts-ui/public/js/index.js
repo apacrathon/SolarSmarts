@@ -379,14 +379,35 @@ app.controller('myCtrl', [
                 }
             }).then(function(response){
                 console.log(response[0]);
-                $scope.response;
+                for(var i = 0; i < response[0].length; i++) {
+                    response[0][i].PercentError = (response[0][i].PercentError).toFixed(2);
+                    response[0][i].PGenerated = (response[0][i].PGenerated).toFixed(2);
+                    response[0][i].NGenerated = (response[0][i].NGenerated).toFixed(2);
+                    let tableTime = new Date(response[0][i].PDate);
+                    response[0][i].tableDate = formatDate(tableTime);
+                }
+                $scope.$apply(() => {
+                    $scope.anomalyList = response[0];
+
+                    $scope.currentPage = 1;
+                    $scope.total_show = "15";
+                    $scope.numberOfPages = 10;
+
+                    $scope.pagenumber = true;
+                    $scope.totla_result_showing = true;
+                    $scope.totla_result_showing_onsearcchh = false;
+
+                    $scope.sortKey = function(key) {
+                        $scope.currentPage = 1;
+                        $scope.myOrderBy = key;
+                    };
+
+                    $scope.maxtotal = Math.ceil(response[0].length / parseInt($scope.total_show));
+                    $scope.changeTotalShow = function(){
+                        $scope.maxtotal = response[0].length / parseInt($scope.total_show);
+                    };
+                });
             });
-
-
-
-
-
         });
-
     }
 ]);
